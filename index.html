@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>RASKOL 17 | World Map</title>
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<style>
+
+html,body{
+
+margin:0;
+height:100%;
+background:#050505;
+font-family:Arial,Helvetica,sans-serif;
+overflow:hidden;
+
+}
+
+#map{
+
+position:absolute;
+left:0;
+top:0;
+right:420px;
+bottom:0;
+
+}
+
+#panel{
+
+position:absolute;
+top:0;
+right:0;
+width:420px;
+height:100%;
+
+background:#0b0b0b;
+
+border-left:2px solid #c9a227;
+
+display:flex;
+flex-direction:column;
+
+box-shadow:
+0 0 40px rgba(0,0,0,.65);
+
+}
+
+#header{
+
+padding:22px;
+
+background:#5b0a18;
+
+color:#faf7e6;
+
+font-size:26px;
+
+font-weight:bold;
+
+border-bottom:1px solid #c9a227;
+
+}
+
+#image{
+
+width:100%;
+
+height:240px;
+
+background:#161616;
+
+object-fit:cover;
+
+border-bottom:2px solid #c9a227;
+
+}
+
+#content{
+
+padding:22px;
+
+overflow-y:auto;
+
+color:#ece7dc;
+
+line-height:1.7;
+
+}
+
+#content h2{
+
+margin-top:0;
+
+color:#f0d98a;
+
+}
+
+.placeholder{
+
+color:#999;
+
+}
+
+.location{
+
+width:18px;
+
+height:18px;
+
+background:#d4af37;
+
+border-radius:50%;
+
+border:2px solid #fff4c7;
+
+box-shadow:
+
+0 0 8px #d4af37,
+
+0 0 18px #d4af37,
+
+0 0 28px rgba(212,175,55,.75);
+
+animation:pulse 2s infinite;
+
+}
+
+@keyframes pulse{
+
+0%{
+
+transform:scale(1);
+
+}
+
+50%{
+
+transform:scale(1.35);
+
+}
+
+100%{
+
+transform:scale(1);
+
+}
+
+}
+
+.leaflet-popup-content-wrapper{
+
+background:#111;
+
+color:white;
+
+border:1px solid #c9a227;
+
+}
+
+.leaflet-popup-tip{
+
+background:#111;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<div id="panel">
+
+<div id="header">
+
+WORLD LOCATIONS
+
+</div>
+
+<img
+id="image"
+src="images/placeholder.jpg">
+
+<div id="content">
+
+<h2>Select a location</h2>
+
+<p class="placeholder">
+
+Click one of the glowing markers on the map.
+
+</p>
+
+</div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+
+const map=L.map("map",{
+
+worldCopyJump:true
+
+}).setView([35,15],2);
+
+L.tileLayer(
+
+"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+
+{
+
+maxZoom:18,
+
+attribution:""
+
+}
+
+).addTo(map);
+
+const icon=L.divIcon({
+
+className:"",
+
+html:'<div class="location"></div>',
+
+iconSize:[18,18]
+
+});
+
+const locations=[
+
+{
+
+name:"Moscow",
+
+lat:55.7558,
+
+lng:37.6173,
+
+image:"images/moscow.jpg",
+
+text:`
+
+<h2>Moscow</h2>
+
+<p>
+
+Write your Moscow lore here.
+
+</p>
+
+`
+
+},
+
+{
+
+name:"St. Petersburg",
+
+lat:59.9311,
+
+lng:30.3609,
+
+image:"images/stpetersburg.jpg",
+
+text:`
+
+<h2>St. Petersburg</h2>
+
+<p>
+
+Write your St. Petersburg lore here.
+
+</p>
+
+`
+
+},
+
+{
+
+name:"Berlin",
+
+lat:52.5200,
+
+lng:13.4050,
+
+image:"images/berlin.jpg",
+
+text:"<h2>Berlin</h2><p>Placeholder.</p>"
+
+},
+
+{
+
+name:"Thailand",
+
+lat:15.87,
+
+lng:100.99,
+
+image:"images/thailand.jpg",
+
+text:"<h2>Thailand</h2><p>Placeholder.</p>"
+
+},
+
+{
+
+name:"Belgium",
+
+lat:50.5039,
+
+lng:4.4699,
+
+image:"images/belgium.jpg",
+
+text:"<h2>Belgium</h2><p>Placeholder.</p>"
+
+},
+
+{
+
+name:"Philadelphia",
+
+lat:39.9526,
+
+lng:-75.1652,
+
+image:"images/philadelphia.jpg",
+
+text:"<h2>Philadelphia</h2><p>Placeholder.</p>"
+
+},
+
+{
+
+name:"Atlantic City",
+
+lat:39.3643,
+
+lng:-74.4229,
+
+image:"images/atlanticcity.jpg",
+
+text:"<h2>Atlantic City</h2><p>Placeholder.</p>"
+
+},
+
+{
+
+name:"Las Vegas",
+
+lat:36.1699,
+
+lng:-115.1398,
+
+image:"images/lasvegas.jpg",
+
+text:"<h2>Las Vegas</h2><p>Placeholder.</p>"
+
+}
+
+];
+
+locations.forEach(location=>{
+
+const marker=L.marker(
+
+[location.lat,location.lng],
+
+{
+
+icon:icon
+
+}
+
+).addTo(map);
+
+marker.bindTooltip(location.name);
+
+marker.on("click",()=>{
+
+document.getElementById("image").src=location.image;
+
+document.getElementById("content").innerHTML=location.text;
+
+});
+
+});
+
+</script>
+
+</body>
+</html>
