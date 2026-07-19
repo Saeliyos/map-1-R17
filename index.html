@@ -264,11 +264,20 @@ Click one of the glowing markers on the map.
 
 <script>
 
+    /* bitch ass map view */ 
 const map=L.map("map",{
 
-worldCopyJump:true
+worldCopyJump:true,
+minZoom:2,
+maxBounds:[
+    [-85,-180],
+    [85,180]
+],
+maxBoundsViscosity:1.0
 
 }).setView([35,15],2);
+
+    /* end of map view */
 
 L.tileLayer(
 
